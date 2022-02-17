@@ -2,7 +2,7 @@ import time
 
 # Auxiliary methods
 continue_execution = True
-def stop(evento):
+def stop(event):
     global continue_execution
     log("Program aborted")
     continue_execution = False
@@ -82,9 +82,15 @@ def replay_latest_wave(iteration):
     waitVanish("wave_icon.png")
 
 
+def is_add_in_progress():
+    return exists(get_pattern("add_in_progress_second.png", 0.9)) \
+           or exists(get_pattern("add_in_progress_seconds_remaining.png", 0.85)) \
+           or exists(get_pattern("add_in_progress_reward_in.png", 0.9))
+
+
 def force_add_close():
     max_wait = 40
-    while exists(get_pattern("add_in_progress_second.png", 0.9)) or exists(get_pattern("add_in_progress_seconds_remaining.png", 0.85)):
+    while is_add_in_progress():
         max_wait -= 1
         if max_wait <= 0:
             log_error("Waiting add to dissappear")
