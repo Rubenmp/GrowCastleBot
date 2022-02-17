@@ -1,12 +1,17 @@
 import time
 
 # Auxiliary methods
-seguir = True
+continue_execution = True
 def stop(evento):
-    global seguir
-    seguir = False
+    global continue_execution
+    log("Program aborted")
+    continue_execution = False
 
-Env.addHotkey(Key.F1, KeyModifier.CTRL, stop)
+
+def accelerate_sikulix():
+    Settings.MoveMouseDelay = 0
+    Settings.DelayBeforeMouseDown = 0
+
 
 def log(message):
     print("[INFO] " + message)
@@ -16,35 +21,35 @@ def log_error(message):
     print("[ERROR] " + message)
     exit(1)
 
+
 def click_if_exists(image):
     if exists(image):
         click(image)
         return True
     return False
 
-def is_ready_to_battle():
+
+def is_inside_game():
     return exists("battle_button.png")
 
 
-def is_inside_wave():
-    return exists("wave_icon.png")
-
-
-def replay():
+def replay_latest_wave(iteration):
     wait("replay_button.png")
     click("replay_button.png")
     click_if_exists("replay_type_latest_button.png")
 
-    log("Replaying latest wave")
+    log("Replaying latest wave (times " + str(iteration) + ")")
     wait("wave_icon.png")
     click_if_exists("speed_1x.png")
 
-    return True
+    waitVanish("wave_icon.png")
+    wait("battle_button.png")
 
 
 def watch_add_if_exists():
     if not click_if_exists("show_add_button.png"):
         return
+
     wait("add_seconds_remaining.png")
     waitVanish("add_seconds_remaining.png")
 
@@ -52,13 +57,20 @@ def watch_add_if_exists():
     if not click_if_exists("add_close_button.png"):
        log_error("It was not possible to close add button")
 
+
 # Program start
+Env.addHotkey(Key.F1, KeyModifier.CTRL, stop)
 log("Program started, press 'Ctrl + F1' to stop it")
-time.sleep(1) # TODO: change it to allow user to read the message
+#time.sleep(4)
 
-watch_add_if_exists()
-print("success")
+if not is_inside_game():
+    log_error("Simulator must be inside the game (battle button must be available)")
 
+accelerate_sikulix()
 
-#while (seguir):
-#    exit(0)
+times = 0
+while continue_execution:
+    times += 1
+    replay_latest_wave(times)
+
+log("Program aborted")
