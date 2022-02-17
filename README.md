@@ -22,7 +22,7 @@ $ scrcpy
 
 - Create alias for sikulix jar
 ```console
-$ alias RunGrowCastleBot='java -jar PATH_TO_SIKULIX_JAR/sikulixide-2.0.5.jar -r GrowCastle.sikuli'
+$ alias RunGrowCastleBot='java -jar SIKULIX_JAR_DIR/sikulixide-2.0.5.jar -r GrowCastle.sikuli'
 ```
 
 - Then run the program
