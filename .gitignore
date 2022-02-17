@@ -125,5 +125,12 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+
 # Pyre type checker
 .pyre/
+
+
+
+
+
+sikulixide-2.0.5.jar
