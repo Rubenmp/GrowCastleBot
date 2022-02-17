@@ -34,16 +34,20 @@ def is_inside_game():
 
 
 def get_replay_button_pattern():
-    return Pattern("replay_button.png").similar(0.7)
+    return get_pattern("replay_button.png", 0.8)
 
 
-def force_wait_to_main_page():
+def get_pattern(image, similarity):
+    return Pattern(image).similar(similarity)
+
+
+def force_wait_pattern(pattern):
     times_searching_button = 0
-    while not exists(get_replay_button_pattern()):
+    while not exists(pattern):
         times_searching_button += 1
         wait(1)
         if times_searching_button > 20:
-            log_error("It was not possible to click on replay button")
+            log_error("It was not possible to click on pattern '" + str(pattern) + "'")
     time.sleep(1)
 
 
@@ -62,12 +66,13 @@ def watch_add_if_exists():
     if not click_if_exists("show_add_button.png"):
         return
 
-    wait("add_seconds_remaining.png")
-    waitVanish("add_seconds_remaining.png")
+    add_seconds_pattern = get_pattern("add_seconds_remaining.png", 0.8)
+    waitVanish(add_seconds_pattern)
 
-    wait("add_close_button.png")
+    add_close_pattern = get_pattern("add_close_button.png", 0.9)
+    force_wait_pattern(add_close_pattern)
     if not click_if_exists("add_close_button.png"):
-       log_error("It was not possible to close add button")
+       log_error("It was not possible to close the add")
 
 
 # Program start
@@ -83,7 +88,7 @@ times = 0
 while continue_execution:
     times += 1
     replay_latest_wave(times)
-    force_wait_to_main_page()
+    force_wait_pattern(get_replay_button_pattern())
     watch_add_if_exists()
     time.sleep(6)
 
