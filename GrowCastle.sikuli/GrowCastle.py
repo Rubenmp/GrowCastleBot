@@ -30,6 +30,10 @@ def replay():
         click("replay_type_latest_button.png")
 
     log("Replaying latest wave")
+    wait("wave_icon.png")
+    if exists("speed_1x.png"):
+        click("speed_1x.png")
+
     return True
 
 
