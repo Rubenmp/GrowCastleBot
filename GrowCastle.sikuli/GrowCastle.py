@@ -32,25 +32,14 @@ def click_if_exists(image):
 def is_inside_game():
     return exists("battle_button.png")
 
-def do_exist(image):
-    return exists(image) is not None
 
 def get_replay_button_pattern():
     return Pattern("replay_button.png").similar(0.7)
 
 def replay_or_error():
-    print("replay_or_error")
-    print(do_exist("replay_button.png"))
-    print(exists("replay_button.png"))
-    #if not do_exist("replay_button.png"):
-    #   wait("replay_button.png")
-    #if not do_exist("replay_button.png"):
-    #    log_error("It was not possible to replay the game")
-
     times_searching_button = 0
     while not exists(get_replay_button_pattern()):
         times_searching_button += 1
-        print("Times searching button: " + str(times_searching_button))
         wait(1)
         if times_searching_button > 20:
             log_error("It was not possible to click on replay button")
@@ -67,7 +56,6 @@ def replay_latest_wave(iteration):
 
     waitVanish("wave_icon.png")
     time.sleep(4)
-    #wait("replay_button.png")
 
 
 def watch_add_if_exists():
@@ -97,7 +85,5 @@ while continue_execution:
     replay_latest_wave(times)
     watch_add_if_exists()
     time.sleep(6)
-    print("sleep done")
-    print(exists("replay_button.png"))
 
 log("Program aborted")
