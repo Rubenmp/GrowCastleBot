@@ -24,6 +24,10 @@ def click_if_exists(image):
     return False
 
 
+def is_inside_main_page():
+    return exists("battle_button.png")
+
+
 def get_replay_button_pattern():
     return get_pattern("replay_button.png", 0.8)
 
@@ -39,18 +43,25 @@ def get_existing_pattern_index(patterns):
 
     return None
 
+
 def force_wait_any_pattern(patterns):
+    return force_wait_any_pattern_or_max_seconds(patterns, None)
+
+
+def force_wait_any_pattern_or_max_seconds(patterns, max_seconds):
     # This method return found pattern index
-    times_searching_pattern = 0
+    seconds_searching_pattern = 0
     while True:
         pattern_index = get_existing_pattern_index(patterns)
         if pattern_index is not None:
             return pattern_index
 
-        times_searching_pattern += 1
+        seconds_searching_pattern += 1
         wait(1)
-        if times_searching_pattern > 45:
+        if max_seconds is None and seconds_searching_pattern > 45:
             log_error("It was not possible to click on any pattern from '" + str(patterns) + "'")
+        elif max_seconds is not None and seconds_searching_pattern > max_seconds:
+            return None
 
 
 def force_wait_pattern(pattern):
@@ -71,23 +82,34 @@ def replay_latest_wave(iteration):
     waitVanish("wave_icon.png")
 
 
-def watch_add_if_exists():
-    if not click_if_exists("show_add_button.png"):
-        return
-
-    add_seconds_pattern = get_pattern("add_seconds_remaining.png", 0.8)
-    waitVanish(add_seconds_pattern)
-
-    print("waiting google play icon search")
-    force_wait_any_pattern(["add_google_play_icon.png", "reward_granted.png"])
+def force_add_close(attempt):
     close_add_button_patterns = [get_pattern("add_close_button_white_background.png", 0.9), get_pattern("add_close_button_black_background.png", 0.9)]
     found_pattern_index = force_wait_any_pattern(close_add_button_patterns)
     print("found_pattern_index" + str(found_pattern_index))
     close_button = close_add_button_patterns[found_pattern_index]
-    if not click_if_exists(close_button):
-       log_error("It was not possible to close the add")
+    if click_if_exists(close_button):
+        if not is_inside_main_page():
+            time.sleep(1)
+            if is_inside_main_page:
+                return
+            log("Add close button needs to be clicked clicked again " + str(attempt) + " times")
+            if attempt > 30:
+                log_error("It was not possible to close the add after 30 attempts")
+            force_add_close(attempt + 1)
     else:
-        log("Add close button was clicked")
+        log_error("It was not possible to close the add")
+
+
+def watch_add_if_exists():
+    if not click_if_exists("show_add_button.png"):
+        return
+
+    add_seconds_pattern = get_pattern("add_in_progress_seconds_remaining.png", 0.8)
+    waitVanish(add_seconds_pattern)
+
+    print("waiting google play icon search")
+    force_wait_any_pattern_or_max_seconds(["add_finished_google_play_icon.png", "add_finished_reward_granted.png"], 45)
+    force_add_close(1)
 
 
 # Program start
@@ -95,7 +117,7 @@ Env.addHotkey(Key.F1, KeyModifier.CTRL, stop)
 log("Program started, press 'Ctrl + F1' to stop it")
 time.sleep(1)
 
-if not exists("battle_button.png"):
+if not is_inside_main_page():
     log_error("Simulator must be inside the game (battle button must be available)")
 
 times = 0
