@@ -20,13 +20,9 @@ It uses phone mirroring and images recognition to interact with the game, **repl
 $ scrcpy
 ```
 
-- Create alias for sikulix jar
+- Create alias and execute the bot
 ```console
 $ alias RunGrowCastleBot='java -jar SIKULIX_JAR_DIR/sikulixide-2.0.5.jar -r GrowCastle.sikuli'
-```
-
-- Then run the program
-```console
 $ RunGrowCastleBot
 ```
 
