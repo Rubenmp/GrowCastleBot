@@ -3,7 +3,6 @@ This is a bot for the game [Grow Castle](https://play.google.com/store/apps/deta
 
 ![Grow Castle Bot Demo](./GrowCastleBotDemo.gif)
 
-
 It uses phone mirroring and images recognition to interact with the game, replaying the last wave indefinitely.
 
 
@@ -23,17 +22,12 @@ $ scrcpy
 
 - Create alias for sikulix jar
 ```console
-$ alias RunGrowCastleBot='java -jar sikulixide-2.0.5.jar -r GrowCastle.sikuli'
+$ alias RunGrowCastleBot='java -jar PATH_TO_SIKULIX_JAR/sikulixide-2.0.5.jar -r GrowCastle.sikuli'
 ```
 
-- Run the program
+- Then run the program
 ```console
 $ RunGrowCastleBot
-```
-
-Or directly copy Sikulix jar in the root folder and run
-```console
-$ java -jar sikulixide-2.0.5.jar -r GrowCastle.sikuli/
 ```
 
 
