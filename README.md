@@ -3,7 +3,7 @@ This is a bot for the game [Grow Castle](https://play.google.com/store/apps/deta
 
 ![Grow Castle Bot Demo](./GrowCastleBotDemo.gif)
 
-It uses phone mirroring and images recognition to interact with the game, replaying the last wave indefinitely.
+It uses phone mirroring and images recognition to interact with the game, **replaying the last wave indefinitely**.
 
 
 ## Requirements
