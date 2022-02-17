@@ -36,20 +36,20 @@ def is_inside_game():
 def get_replay_button_pattern():
     return Pattern("replay_button.png").similar(0.7)
 
-def replay_or_error():
+
+def force_wait_to_main_page():
     times_searching_button = 0
     while not exists(get_replay_button_pattern()):
         times_searching_button += 1
         wait(1)
         if times_searching_button > 20:
             log_error("It was not possible to click on replay button")
-
-    click(get_replay_button_pattern())
-    click_if_exists("replay_type_latest_button.png")
+    time.sleep(1)
 
 
 def replay_latest_wave(iteration):
-    replay_or_error()
+    click(get_replay_button_pattern())
+    click_if_exists("replay_type_latest_button.png")
     log("Replaying latest wave (times " + str(iteration) + ")")
     wait("wave_icon.png")
     click_if_exists("speed_1x.png")
@@ -83,6 +83,7 @@ times = 0
 while continue_execution:
     times += 1
     replay_latest_wave(times)
+    force_wait_to_main_page()
     watch_add_if_exists()
     time.sleep(6)
 
