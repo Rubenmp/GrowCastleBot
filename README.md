@@ -20,21 +20,15 @@ $ scrcpy
 
 - Create alias for sikulix jar
 ```console
-$ alias runsikulix='PATH-TO-SIKULIX/sikulixide-2.0.5.jar'
+$ alias RunGrowCastleBot='java -jar sikulixide-2.0.5.jar -r GrowCastle.sikuli'
 ```
 
 - Run the program
 ```console
-$ runsikulix -r GrowCastle.sikuli
+$ RunGrowCastleBot
 ```
 
 Or directly copy Sikulix jar in the root folder and run
 ```console
 $ java -jar sikulixide-2.0.5.jar -r GrowCastle.sikuli/
 ```
-
-
-## Improvements
-This bot works but, in my opinion, it's overkill. A mirror should not be need to create custom macros
-Alternatives
-- Phone macro recorders ([example](https://www.youtube.com/watch?v=5SjC2PHPsTo&t=46s&ab_channel=BruceCollins&t=46s)) -> ineffective, too simple, it does not allow to introduce our code to recognize images
