@@ -1,7 +1,7 @@
 # Grow Castle bot
 This is a bot for the game [Grow Castle](https://play.google.com/store/apps/details?id=com.raongames.growcastle&hl=en&gl=US).
 
-It uses phone mirroring and image recognition to interact with the game.
+It uses phone mirroring and images recognition to interact with the game, replaying the last wave indefinitely.
 
 
 ## Requirements
@@ -32,3 +32,8 @@ Or directly copy Sikulix jar in the root folder and run
 ```console
 $ java -jar sikulixide-2.0.5.jar -r GrowCastle.sikuli/
 ```
+
+
+## Improvements
+- Detect victory/defeat for each wave. Use this information to dynamically battle the next waves, not just replay the last one.
+- Click on treasures ("treasure.png") in the middle of the waves, not just wait until the end.

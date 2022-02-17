@@ -6,6 +6,8 @@ def stop(event):
     global continue_execution
     log("Program aborted")
     continue_execution = False
+    exit(0)
+
 
 
 def log(message):
@@ -119,7 +121,7 @@ def watch_add_if_exists():
 # Program start
 Env.addHotkey(Key.F1, KeyModifier.CTRL, stop)
 log("Program started, press 'Ctrl + F1' to stop it")
-time.sleep(1)
+time.sleep(4)
 
 if not is_inside_main_page():
     log_error("Simulator must be inside the game (battle button must be available)")
@@ -131,4 +133,4 @@ while continue_execution:
     force_wait_main_page()
     watch_add_if_exists()
 
-log("Program aborted")
+log("Program finished")
