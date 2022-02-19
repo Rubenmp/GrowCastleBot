@@ -2,15 +2,13 @@ import time
 
 # Configuration
 show_logs = True
+battle_next_waves = False
+watch_advertisements = True
+
 
 # Auxiliary methods
-continue_execution = True
-
-
 def stop(event):
-    global continue_execution
     log("Program aborted")
-    continue_execution = False
     exit(0)
 
 
@@ -73,7 +71,7 @@ def force_wait_any_pattern_or_max_seconds(patterns, max_seconds):
         time.sleep(1)
         if max_seconds is None and seconds_searching_pattern > 45:
             log_error("It was not possible to click on any pattern from '" + str(patterns) + "'")
-        elif max_seconds is not None and seconds_searching_pattern > max_seconds:
+        elif max_seconds is not None and seconds_searching_pattern >= max_seconds:
             return None
 
 
@@ -87,17 +85,16 @@ def force_wait_main_page():
     time.sleep(1)
 
 
-def battle_next_wave():
-    log("Method battle_next_wave")
+def battle_next_wave(iteration):
+    log("Battle next wave (times " + str(iteration) + ")")
     click(get_pattern("battle_button.png", 0.8))
-    click_if_exists("replay_type_latest_button.png")
     return wait_wave_to_finish()
 
 
 def replay_latest_wave(iteration):
+    log("Replaying latest wave (times " + str(iteration) + ")")
     click(get_replay_button_pattern())
     click_if_exists("replay_type_latest_button.png")
-    log("Replaying latest wave (times " + str(iteration) + ")")
     return wait_wave_to_finish()
 
 
@@ -115,14 +112,6 @@ def wait_wave_to_finish():
     if max_wave_seconds <= 0:
         log_error("It was not possible to wait wave to finish")
 
-    battle_result_patterns = [get_pattern("battle_end_victory.png", 0.9)]
-    pattern_index = force_wait_any_pattern_or_max_seconds(battle_result_patterns)
-    if pattern_index is None:
-        log_warning("It was not possible to determine wave result, assuming defeat.")
-        return False
-
-    return pattern_index == 1
-
 
 def is_add_in_progress():
     return exists(get_pattern("add_in_progress_second.png", 0.9)) \
@@ -138,7 +127,7 @@ def force_add_close():
         if max_wait <= 0:
             log_error("Waiting add to disappear")
         time.sleep(1)
-    force_wait_any_pattern_or_max_seconds([get_pattern("add_finished_reward_granted.png", 0.8)], 3)
+    force_wait_any_pattern_or_max_seconds([get_pattern("add_finished_reward_granted.png", 0.8)], 2)
 
     close_add_button_patterns = [get_pattern("add_close_button_white_background.png", 0.9),
                                  get_pattern("add_close_button_black_background.png", 0.9)]
@@ -164,17 +153,20 @@ def watch_add_if_exists():
 # Program start
 Env.addHotkey(Key.F1, KeyModifier.CTRL, stop)
 log("Program started, press 'Ctrl + F1' to stop it")
-time.sleep(4)
+time.sleep(1.5)
 
 if not is_inside_main_page():
     log_error("Simulator must be inside the game (battle button must be available)")
 
 times = 0
-while continue_execution:
+while True:
     times += 1
-    replay_latest_wave(times)
-    force_wait_main_page()
-    watch_add_if_exists()
-    print("watch_add_if_exists")
+    if battle_next_waves:
+        battle_next_wave(times)
+    else:
+        replay_latest_wave(times)
 
-log("Program finished")
+    force_wait_main_page()
+
+    if watch_advertisements:
+        watch_add_if_exists()
