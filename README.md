@@ -6,10 +6,10 @@ It uses phone mirroring with image recognition to interact with the game. The de
 
 
 ## Features
--  Infinite game waves. Select explicitly next waves behaviour using the variable *battle_next_waves* (default False, leading to infinite wave replays) in file *GrowCastle.py*.
+-  Infinite game waves. Select explicitly next waves behaviour using the variable *battle_next_waves* (default False, leading to infinite wave replays) in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py).
     - Speed will be increased automatically if possible.
     - The treasures shown in the waves will be caught.
-- Watch advertisements depending on variable *watch_advertisements* (default True) in file *GrowCastle.py*.
+- Watch advertisements depending on variable *watch_advertisements* (default True) in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py).
 
 
 ## Requirements
