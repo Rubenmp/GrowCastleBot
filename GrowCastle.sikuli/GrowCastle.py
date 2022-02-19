@@ -5,6 +5,7 @@ show_logs = True
 battle_next_waves = False
 watch_advertisements = True
 use_diamonds = True  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
+waves_to_use_diamonds = 2
 
 
 # Auxiliary methods
@@ -160,9 +161,11 @@ def inside_canon_screen():
 
 
 def use_diamonds(quantity):
+    # Precondition: at least 'quantity' diamonds must be available
     if quantity <= 0:
         return
 
+    log("Using " + str(quantity) + "diamonds")
     if not inside_canon_screen():
         inside_canon = click_if_exists(get_pattern("castle_show_canons.png", 0.9))
         if not inside_canon:
@@ -175,11 +178,10 @@ def use_diamonds(quantity):
         return
 
     for i in range(quantity):
-        print(click_if_exists(get_pattern("castle_canon_level_up_button.png", 0.9)))
+        click(get_pattern("castle_canon_level_up_button.png", 0.9))
 
     type(Key.ESC)  # Close canon upgrade screen
     type(Key.ESC)  # CLose canons screen
-    exit(0)
 
 
 # Program start
@@ -193,16 +195,15 @@ if not is_inside_main_page():
 times = 0
 while True:
     times += 1
+    if battle_next_waves:
+        battle_next_wave(times)
+    else:
+        replay_latest_wave(times)
 
-    use_diamonds(10)
-    exit(0)
+    force_wait_main_page()
 
-if battle_next_waves:
-    battle_next_wave(times)
-else:
-    replay_latest_wave(times)
+    if watch_advertisements:
+        watch_add_if_exists()
 
-force_wait_main_page()
-
-if watch_advertisements:
-    watch_add_if_exists()
+    if use_diamonds and (times % waves_to_use_diamonds) == 0 and times > 0:
+        use_diamonds(waves_to_use_diamonds)
