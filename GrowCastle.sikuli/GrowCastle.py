@@ -4,6 +4,7 @@ import time
 show_logs = True
 battle_next_waves = False
 watch_advertisements = True
+use_diamonds = True  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
 
 
 # Auxiliary methods
@@ -40,6 +41,10 @@ def is_inside_main_page():
 
 def get_replay_button_pattern():
     return get_pattern("replay_button.png", 0.8)
+
+
+def get_castle_canon_ball_pattern():
+    return get_pattern("castle_canon_ball.png", 0.9)
 
 
 def get_pattern(image, similarity):
@@ -150,6 +155,33 @@ def watch_add_if_exists():
     force_add_close()
 
 
+def inside_canon_screen():
+    return exists(get_castle_canon_ball_pattern())
+
+
+def use_diamonds(quantity):
+    if quantity <= 0:
+        return
+
+    if not inside_canon_screen():
+        inside_canon = click_if_exists(get_pattern("castle_show_canons.png", 0.9))
+        if not inside_canon:
+            log_warning("It was not possible to use diamonds. Can not enter canons screen")
+            return
+
+    inside_canon_upgrades = click_if_exists(get_castle_canon_ball_pattern())
+    if not inside_canon_upgrades:
+        log_warning("It was not possible to use diamonds. Can not enter canons upgrades screen")
+        return
+
+    for i in range(quantity):
+        print(click_if_exists(get_pattern("castle_canon_level_up_button.png", 0.9)))
+
+    type(Key.ESC)  # Close canon upgrade screen
+    type(Key.ESC)  # CLose canons screen
+    exit(0)
+
+
 # Program start
 Env.addHotkey(Key.F1, KeyModifier.CTRL, stop)
 log("Program started, press 'Ctrl + F1' to stop it")
@@ -161,12 +193,16 @@ if not is_inside_main_page():
 times = 0
 while True:
     times += 1
-    if battle_next_waves:
-        battle_next_wave(times)
-    else:
-        replay_latest_wave(times)
 
-    force_wait_main_page()
+    use_diamonds(10)
+    exit(0)
 
-    if watch_advertisements:
-        watch_add_if_exists()
+if battle_next_waves:
+    battle_next_wave(times)
+else:
+    replay_latest_wave(times)
+
+force_wait_main_page()
+
+if watch_advertisements:
+    watch_add_if_exists()
