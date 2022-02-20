@@ -10,6 +10,7 @@ It uses phone mirroring with image recognition to interact with the game. The de
     - Speed will be increased automatically if possible.
     - The treasures shown in the waves will be caught.
 - Watch advertisements depending on variable *watch_advertisements* (default True) in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py).
+- Spend diamonds automatically depending on variable *spend_diamonds* (default True) and *wave_period_to_use_diamonds* (default 20) in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py). Otherwise the diamond amount limit would be reached.
 
 
 ## Requirements

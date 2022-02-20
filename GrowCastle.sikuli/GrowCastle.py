@@ -2,10 +2,10 @@ import time
 
 # Configuration
 show_logs = True
-battle_next_waves = True
+battle_next_waves = False
 watch_advertisements = True
-spend_diamonds = False  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
-waves_to_use_diamonds = 20
+spend_diamonds = True  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
+wave_period_to_use_diamonds = 20
 
 
 # Auxiliary methods
@@ -92,13 +92,13 @@ def force_wait_main_page():
 
 
 def battle_next_wave(iteration):
-    log("Battle next wave (times " + str(iteration) + ")")
+    log("Battle next wave (round " + str(iteration) + ")")
     click(pattern("battle_button.png", 0.8))
     return wait_wave_to_finish()
 
 
 def replay_latest_wave(iteration):
-    log("Replaying latest wave (times " + str(iteration) + ")")
+    log("Replaying latest wave (round " + str(iteration) + ")")
     click(get_replay_button_pattern())
     click_if_exists("replay_type_latest_button.png")
     return wait_wave_to_finish()
@@ -200,18 +200,18 @@ time.sleep(1.5)
 if not is_inside_main_page():
     log_error("Simulator must be inside the game (battle button must be available)")
 
-times = 0
+round = 0
 while True:
-    times += 1
+    round += 1
     if battle_next_waves:
-        battle_next_wave(times)
+        battle_next_wave(round)
     else:
-        replay_latest_wave(times)
+        replay_latest_wave(round)
 
     force_wait_main_page()
 
     if watch_advertisements:
         watch_add_if_exists()
 
-    if spend_diamonds and (times % waves_to_use_diamonds) == 0 and times > 0:
-        use_diamonds(waves_to_use_diamonds)
+    if spend_diamonds and (round % wave_period_to_use_diamonds) == 0 and round > 0:
+        use_diamonds(wave_period_to_use_diamonds)
