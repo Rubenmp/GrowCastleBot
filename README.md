@@ -8,7 +8,7 @@ It uses phone mirroring with image recognition to interact with the game. The de
 ## Features
 Most of the features can be customized with configuration variables in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py).
 - Waves
-    - Infinite game waves. Select waves selection behaviour using the variable *waves_selection_pattern*, possible values:
+    - Infinite waves, selection behaviour using the variable *waves_selection_pattern*, possible values:
         - REPLAY: always replay the last wave
         - BATTLE: continue with the next waves
         - MIXED: default, a combination of both scenarios, 1/10 (one BATTLE every 10 rounds, the other 9 waves will be REPLAY)
