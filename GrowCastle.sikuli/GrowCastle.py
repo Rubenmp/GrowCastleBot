@@ -2,11 +2,10 @@ import time
 
 # Configuration
 show_logs = True
-battle_next_waves = True
+waves_selection_pattern = "MIXED"  # REPLAY, NEXT or MIXED
 watch_advertisements = True
-spend_diamonds = False  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
+spend_diamonds_on_canons = False  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds spending them
 upgrade_castle_periodically = True
-wave_period_to_use_diamonds = 20
 
 
 # Auxiliary methods
@@ -194,10 +193,15 @@ def use_diamonds(quantity):
 
 
 def play_wave_phase(round):
-    if battle_next_waves:
+    if waves_selection_pattern == "NEXT":
         battle_next_wave(round)
-    else:
+    elif waves_selection_pattern == "REPLAY":
         replay_latest_wave(round)
+    else:
+        if round % 3 == 0:
+            battle_next_wave(round)
+        else:
+            replay_latest_wave(round)
 
     force_wait_main_page()
 
@@ -208,7 +212,8 @@ def watch_add_phase():
 
 
 def upgrade_castle_phase(round):
-    if spend_diamonds and (round % wave_period_to_use_diamonds) == 0:
+    wave_period_to_use_diamonds = 20
+    if spend_diamonds_on_canons and (round % wave_period_to_use_diamonds) == 0:
         use_diamonds(wave_period_to_use_diamonds)
 
     if upgrade_castle_periodically and round % 10 == 0:

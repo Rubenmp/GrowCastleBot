@@ -6,11 +6,18 @@ It uses phone mirroring with image recognition to interact with the game. The de
 
 
 ## Features
--  Infinite game waves. Select explicitly next waves behaviour using the variable *battle_next_waves* (default False, leading to infinite wave replays) in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py).
+Most of the features can be customized with configuration variables in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py).
+- Waves
+    - Infinite game waves. Select waves selection behaviour using the variable *waves_selection_pattern*, possible values:
+        - REPLAY: always replay the last wave
+        - BATTLE: continue with the next waves
+        - MIXED: default, a combination of both scenarios, 1/10 (one BATTLE every 10 rounds, the other 9 waves will be REPLAY)
     - Speed will be increased automatically if possible.
     - The treasures shown in the waves will be caught.
-- Watch advertisements depending on variable *watch_advertisements* (default True) in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py).
-- Spend diamonds automatically depending on variable *spend_diamonds* (default True) and *wave_period_to_use_diamonds* (default 20) in file [*GrowCastle.py*](./GrowCastle.sikuli/GrowCastle.py). Otherwise the diamond amount limit would be reached.
+- Watch advertisements depending on variable *watch_advertisements* (default True).
+- Update features
+    - Money: upgrade castle. It depends on variable *upgrade_castle_periodically*
+    - Diamonds: upgrade castle canons. Depends on variable *spend_diamonds_on_canons* (default True). If the variable is False it could potentially lose diamonds due to the diamond amount limit.
 
 
 ## Requirements
@@ -22,7 +29,7 @@ It uses phone mirroring with image recognition to interact with the game. The de
 
 
 ## Execution
-Run the phone emulator in your computer
+Run the phone emulator on your computer
 ```console
 $ scrcpy
 ```
@@ -42,6 +49,3 @@ $ RunGrowCastleBot
 - Detect wave result (Victory/Defeat)
     - It would allow to battle the next wave or replay depending on previous results (or replay easier waves if the last wave failed, although is theoretically not possible when played automatically).
     - Attempt done, Sikulix is not fast enough to detect the "Victory" logo that lasts 0.5 seconds. It's possible to detect it using the level (lv) icon shown on the main screen. Taking snapshots ([stackoverflow](https://stackoverflow.com/questions/16745722/whats-the-command-to-take-a-picture-in-sikuli), [docs](http://doc.sikuli.org/screen.html#capturing)) before and after the wave would allow images comparison, detecting if the level changed (Victory) or not (Defeat) using a similarity threshold.
-- Automatic upgrades (needs to detect out of money image to stop upgrades) 
-    - Easy way: upgrade castle every N rounds.
-    - Interesting way: upgrade castle/heroes/towers/leaders/archers using round robin algorithm.
