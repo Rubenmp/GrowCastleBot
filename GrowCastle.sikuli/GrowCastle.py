@@ -2,9 +2,9 @@ import time
 
 # Configuration
 show_logs = True
-battle_next_waves = False
+battle_next_waves = True
 watch_advertisements = True
-spend_diamonds = True  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
+spend_diamonds = False  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
 wave_period_to_use_diamonds = 20
 
 
@@ -170,6 +170,7 @@ def inside_canon_screen():
 
 def use_diamonds(quantity):
     # Precondition: at least 'quantity' diamonds must be available
+    # This method is not able to go back to main page if not enough diamonds message appears.
     if quantity <= 0:
         return
 
@@ -192,6 +193,20 @@ def use_diamonds(quantity):
     type(Key.ESC)  # CLose canons screen
 
 
+def play_wave(round):
+    if battle_next_waves:
+        battle_next_wave(round)
+    else:
+        replay_latest_wave(round)
+
+    force_wait_main_page()
+
+
+def update_castle_phase(round):
+    if spend_diamonds and (round % wave_period_to_use_diamonds) == 0 and round > 0:
+        use_diamonds(wave_period_to_use_diamonds)
+
+
 # Program start
 Env.addHotkey(Key.F1, KeyModifier.CTRL, stop)
 log("Program started, press 'Ctrl + F1' to stop it")
@@ -203,15 +218,9 @@ if not is_inside_main_page():
 round = 0
 while True:
     round += 1
-    if battle_next_waves:
-        battle_next_wave(round)
-    else:
-        replay_latest_wave(round)
-
-    force_wait_main_page()
+    play_wave(round)
 
     if watch_advertisements:
         watch_add_if_exists()
 
-    if spend_diamonds and (round % wave_period_to_use_diamonds) == 0 and round > 0:
-        use_diamonds(wave_period_to_use_diamonds)
+    update_castle_phase(round)
