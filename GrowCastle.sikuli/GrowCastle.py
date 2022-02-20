@@ -4,7 +4,7 @@ import time
 show_logs = True
 waves_selection_pattern = "MIXED"  # REPLAY, NEXT or MIXED
 watch_advertisements = True
-spend_diamonds_on_canons = False  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds spending them
+spend_diamonds_on_canons = True  # Prevent waste of diamonds due to amount limit
 upgrade_castle_periodically = True
 
 
@@ -117,10 +117,10 @@ def wait_wave_to_finish():
     click_if_exists("speed_1x.png")
 
     max_wave_seconds = 600
-    while max_wave_seconds > 0 and exists(pattern("wave_icon.png", 0.9)):
+    while exists(pattern("wave_icon.png", 0.9)) and max_wave_seconds > 0:
         max_wave_seconds -= 1
         click_if_exists("treasure.png")
-        time.sleep(1)
+        time.sleep(2)
 
     if max_wave_seconds <= 0:
         log_error("It was not possible to wait wave to finish")
