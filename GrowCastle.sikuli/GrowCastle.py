@@ -5,6 +5,7 @@ show_logs = True
 battle_next_waves = True
 watch_advertisements = True
 spend_diamonds = False  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
+upgrade_castle_periodically = True
 wave_period_to_use_diamonds = 20
 
 
@@ -121,6 +122,7 @@ def wait_wave_to_finish():
         max_wave_seconds -= 1
         click_if_exists("treasure.png")
         time.sleep(1)
+
     if max_wave_seconds <= 0:
         log_error("It was not possible to wait wave to finish")
 
@@ -209,7 +211,7 @@ def upgrade_castle_phase(round):
     if spend_diamonds and (round % wave_period_to_use_diamonds) == 0:
         use_diamonds(wave_period_to_use_diamonds)
 
-    if round % 10:
+    if upgrade_castle_periodically and round % 10 == 0:
         update_castle(20)
 
 
