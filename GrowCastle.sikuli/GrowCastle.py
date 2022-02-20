@@ -2,10 +2,10 @@ import time
 
 # Configuration
 show_logs = True
-battle_next_waves = False
+battle_next_waves = True
 watch_advertisements = True
-use_diamonds = True  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
-waves_to_use_diamonds = 2
+spend_diamonds = False  # There is a limit in the amount of diamonds to hold. Prevent waste of diamonds using them
+waves_to_use_diamonds = 20
 
 
 # Auxiliary methods
@@ -41,20 +41,20 @@ def is_inside_main_page():
 
 
 def get_replay_button_pattern():
-    return get_pattern("replay_button.png", 0.8)
+    return pattern("replay_button.png", 0.8)
 
 
 def get_castle_canon_ball_pattern():
-    return get_pattern("castle_canon_ball.png", 0.9)
+    return pattern("castle_canon_ball.png", 0.9)
 
 
-def get_pattern(image, similarity):
+def pattern(image, similarity):
     return Pattern(image).similar(similarity)
 
 
 def get_existing_pattern_index(patterns):
-    for count, pattern in enumerate(patterns):
-        if exists(pattern):
+    for count, current_pattern in enumerate(patterns):
+        if exists(current_pattern):
             return count
 
     return None
@@ -93,7 +93,7 @@ def force_wait_main_page():
 
 def battle_next_wave(iteration):
     log("Battle next wave (times " + str(iteration) + ")")
-    click(get_pattern("battle_button.png", 0.8))
+    click(pattern("battle_button.png", 0.8))
     return wait_wave_to_finish()
 
 
@@ -111,7 +111,7 @@ def wait_wave_to_finish():
     click_if_exists("speed_1x.png")
 
     max_wave_seconds = 600
-    while max_wave_seconds > 0 and exists(get_pattern("wave_icon.png", 0.9)):
+    while max_wave_seconds > 0 and exists(pattern("wave_icon.png", 0.9)):
         max_wave_seconds -= 1
         click_if_exists("treasure.png")
         time.sleep(1)
@@ -119,24 +119,31 @@ def wait_wave_to_finish():
         log_error("It was not possible to wait wave to finish")
 
 
-def is_add_in_progress():
-    return exists(get_pattern("add_in_progress_second.png", 0.9)) \
-           or exists(get_pattern("add_in_progress_seconds_remaining.png", 0.85)) \
-           or exists(get_pattern("add_in_progress_reward_in.png", 0.9))
+def detect_add_seconds():
+    log("Method wait_add_to_finish")
+    print(exists(pattern("img/adds/add_10_secs.png", 0.5)))
+    print(exists(pattern("img/adds/add_20_secs.png", 0.5)))
+    if exists(pattern("img/adds/add_10_secs.png", 0.97)):
+        log("Detected add 10 seconds")
+        return 12
+    elif exists(pattern("img/adds/add_20_secs.png", 0.97)):
+        log("Detected add 20 seconds")
+        return 22
+
+    return 32
 
 
-def force_add_close():
-    log("Method force_add_close")
-    max_wait = 40
-    while is_add_in_progress():
-        max_wait -= 1
-        if max_wait <= 0:
-            log_error("Waiting add to disappear")
-        time.sleep(1)
-    force_wait_any_pattern_or_max_seconds([get_pattern("add_finished_reward_granted.png", 0.8)], 2)
+def wait_add_to_finish():
+    log("Method wait_add_to_finish")
+    waiting_seconds = detect_add_seconds()
+    time.sleep(waiting_seconds)
 
-    close_add_button_patterns = [get_pattern("add_close_button_white_background.png", 0.9),
-                                 get_pattern("add_close_button_black_background.png", 0.9)]
+
+def close_add():
+    log("Method close_add")
+    close_add_button_patterns = [pattern("img/adds/add_close_button_white_background.png", 0.9),
+                                 pattern("img/adds/add_close_button_black_background.png", 0.9),
+                                 pattern("img/adds/add_close_button_grey_background.png", 0.9)]
     found_pattern_index = force_wait_any_pattern(close_add_button_patterns)
     close_button = close_add_button_patterns[found_pattern_index]
     if click_if_exists(close_button):
@@ -153,7 +160,8 @@ def watch_add_if_exists():
     if not click_if_exists("show_add_button.png"):
         return
 
-    force_add_close()
+    wait_add_to_finish()
+    close_add()
 
 
 def inside_canon_screen():
@@ -167,7 +175,7 @@ def use_diamonds(quantity):
 
     log("Using " + str(quantity) + "diamonds")
     if not inside_canon_screen():
-        inside_canon = click_if_exists(get_pattern("castle_show_canons.png", 0.9))
+        inside_canon = click_if_exists(pattern("castle_show_canons.png", 0.9))
         if not inside_canon:
             log_warning("It was not possible to use diamonds. Can not enter canons screen")
             return
@@ -178,7 +186,7 @@ def use_diamonds(quantity):
         return
 
     for i in range(quantity):
-        click(get_pattern("castle_canon_level_up_button.png", 0.9))
+        click(pattern("castle_canon_level_up_button.png", 0.9))
 
     type(Key.ESC)  # Close canon upgrade screen
     type(Key.ESC)  # CLose canons screen
@@ -205,5 +213,5 @@ while True:
     if watch_advertisements:
         watch_add_if_exists()
 
-    if use_diamonds and (times % waves_to_use_diamonds) == 0 and times > 0:
+    if spend_diamonds and (times % waves_to_use_diamonds) == 0 and times > 0:
         use_diamonds(waves_to_use_diamonds)
