@@ -36,30 +36,7 @@ def click_if_exists(image):
     return False
 
 
-def is_inside_main_page():
-    return exists("battle_button.png")
-
-
-def get_replay_button_pattern():
-    return pattern("replay_button.png", 0.8)
-
-
-def get_castle_canon_ball_pattern():
-    return pattern("castle_canon_ball.png", 0.9)
-
-
-def pattern(image, similarity):
-    return Pattern(image).similar(similarity)
-
-
-def get_existing_pattern_index(patterns):
-    for count, current_pattern in enumerate(patterns):
-        if exists(current_pattern):
-            return count
-
-    return None
-
-
+# Methods to wait
 def force_wait_any_pattern(patterns):
     return force_wait_any_pattern_or_max_seconds(patterns, None)
 
@@ -91,6 +68,35 @@ def force_wait_main_page():
     time.sleep(1)
 
 
+# Methods to detect image patterns
+def pattern(image, similarity):
+    return Pattern(image).similar(similarity)
+
+
+def get_existing_pattern_index(patterns):
+    for count, current_pattern in enumerate(patterns):
+        if exists(current_pattern):
+            return count
+
+    return None
+
+
+def is_inside_main_page():
+    return exists("battle_button.png")
+
+
+def is_inside_canon_screen():
+    return exists(get_castle_canon_ball_pattern())
+
+
+def get_replay_button_pattern():
+    return pattern("replay_button.png", 0.8)
+
+
+def get_castle_canon_ball_pattern():
+    return pattern("castle_canon_ball.png", 0.9)
+
+
 def battle_next_wave(iteration):
     log("Battle next wave (round " + str(iteration) + ")")
     click(pattern("battle_button.png", 0.8))
@@ -119,24 +125,10 @@ def wait_wave_to_finish():
         log_error("It was not possible to wait wave to finish")
 
 
-def detect_add_seconds():
-    log("Method wait_add_to_finish")
-    print(exists(pattern("img/adds/add_10_secs.png", 0.5)))
-    print(exists(pattern("img/adds/add_20_secs.png", 0.5)))
-    if exists(pattern("img/adds/add_10_secs.png", 0.97)):
-        log("Detected add 10 seconds")
-        return 12
-    elif exists(pattern("img/adds/add_20_secs.png", 0.97)):
-        log("Detected add 20 seconds")
-        return 22
-
-    return 32
-
-
 def wait_add_to_finish():
-    log("Method wait_add_to_finish")
-    waiting_seconds = detect_add_seconds()
-    time.sleep(waiting_seconds)
+    # Not currently dynamically detecting seconds properly.
+    # It always wait 32 seconds, allowing the phone to charge battery
+    time.sleep(32)
 
 
 def close_add():
@@ -164,8 +156,14 @@ def watch_add_if_exists():
     close_add()
 
 
-def inside_canon_screen():
-    return exists(get_castle_canon_ball_pattern())
+def update_castle(times):
+    # Precondition: use this method at the end of the round because it could show 'Nor enough gold' message
+    # Need to close the message or wait if this method is needed before round end
+    upgrade_button = pattern("img/upgrade_castle_button.png", 0.2)
+
+    if exists(upgrade_button):
+        for _ in range(times):
+            click(find(upgrade_button).right(250))
 
 
 def use_diamonds(quantity):
@@ -175,7 +173,7 @@ def use_diamonds(quantity):
         return
 
     log("Using " + str(quantity) + "diamonds")
-    if not inside_canon_screen():
+    if not is_inside_canon_screen():
         inside_canon = click_if_exists(pattern("castle_show_canons.png", 0.9))
         if not inside_canon:
             log_warning("It was not possible to use diamonds. Can not enter canons screen")
@@ -186,14 +184,14 @@ def use_diamonds(quantity):
         log_warning("It was not possible to use diamonds. Can not enter canons upgrades screen")
         return
 
-    for i in range(quantity):
+    for _ in range(quantity):
         click(pattern("castle_canon_level_up_button.png", 0.9))
 
     type(Key.ESC)  # Close canon upgrade screen
     type(Key.ESC)  # CLose canons screen
 
 
-def play_wave(round):
+def play_wave_phase(round):
     if battle_next_waves:
         battle_next_wave(round)
     else:
@@ -202,9 +200,17 @@ def play_wave(round):
     force_wait_main_page()
 
 
-def update_castle_phase(round):
-    if spend_diamonds and (round % wave_period_to_use_diamonds) == 0 and round > 0:
+def watch_add_phase():
+    if watch_advertisements:
+        watch_add_if_exists()
+
+
+def upgrade_castle_phase(round):
+    if spend_diamonds and (round % wave_period_to_use_diamonds) == 0:
         use_diamonds(wave_period_to_use_diamonds)
+
+    if round % 10:
+        update_castle(20)
 
 
 # Program start
@@ -218,9 +224,6 @@ if not is_inside_main_page():
 round = 0
 while True:
     round += 1
-    play_wave(round)
-
-    if watch_advertisements:
-        watch_add_if_exists()
-
-    update_castle_phase(round)
+    play_wave_phase(round)
+    watch_add_phase()
+    upgrade_castle_phase(round)
