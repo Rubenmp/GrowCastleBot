@@ -69,7 +69,7 @@ def force_wait_main_page():
 
 
 # Methods to detect image patterns
-def pattern(image, similarity):
+def get_image(image, similarity):
     return Pattern(image).similar(similarity)
 
 
@@ -90,16 +90,16 @@ def is_inside_canon_screen():
 
 
 def get_replay_button_pattern():
-    return pattern("replay_button.png", 0.8)
+    return get_image("replay_button.png", 0.8)
 
 
 def get_castle_canon_ball_pattern():
-    return pattern("castle_canon_ball.png", 0.9)
+    return get_image("castle_canon_ball.png", 0.9)
 
 
 def battle_next_wave(iteration):
     log("Battle next wave (round " + str(iteration) + ")")
-    click(pattern("battle_button.png", 0.8))
+    click(get_image("battle_button.png", 0.8))
     return wait_wave_to_finish()
 
 
@@ -117,7 +117,7 @@ def wait_wave_to_finish():
     click_if_exists("speed_1x.png")
 
     max_wave_seconds = 600
-    while exists(pattern("wave_icon.png", 0.9)) and max_wave_seconds > 0:
+    while exists(get_image("wave_icon.png", 0.9)) and max_wave_seconds > 0:
         max_wave_seconds -= 1
         click_if_exists("treasure.png")
         time.sleep(2)
@@ -134,9 +134,9 @@ def wait_add_to_finish():
 
 def close_add():
     log("Method close_add")
-    close_add_button_patterns = [pattern("img/adds/add_close_button_white_background.png", 0.9),
-                                 pattern("img/adds/add_close_button_black_background.png", 0.9),
-                                 pattern("img/adds/add_close_button_grey_background.png", 0.9)]
+    close_add_button_patterns = [get_image("adds/add_close_button_white_background.png", 0.9),
+                                 get_image("adds/add_close_button_black_background.png", 0.9),
+                                 get_image("adds/add_close_button_grey_background.png", 0.9)]
     found_pattern_index = force_wait_any_pattern(close_add_button_patterns)
     close_button = close_add_button_patterns[found_pattern_index]
     if click_if_exists(close_button):
@@ -160,7 +160,7 @@ def watch_add_if_exists():
 def update_castle(times):
     # Precondition: use this method at the end of the round because it could show 'Nor enough gold' message
     # Need to close the message or wait if this method is needed before round end
-    upgrade_button = pattern("img/upgrade_castle_button.png", 0.2)
+    upgrade_button = get_image("upgrade_castle_button.png", 0.2)
 
     if exists(upgrade_button):
         for _ in range(times):
@@ -175,7 +175,7 @@ def use_diamonds(quantity):
 
     log("Using " + str(quantity) + "diamonds")
     if not is_inside_canon_screen():
-        inside_canon = click_if_exists(pattern("castle_show_canons.png", 0.9))
+        inside_canon = click_if_exists(get_image("castle_show_canons.png", 0.9))
         if not inside_canon:
             log_warning("It was not possible to use diamonds. Can not enter canons screen")
             return
@@ -186,7 +186,7 @@ def use_diamonds(quantity):
         return
 
     for _ in range(quantity):
-        click(pattern("castle_canon_level_up_button.png", 0.9))
+        click(get_image("castle_canon_level_up_button.png", 0.9))
 
     type(Key.ESC)  # Close canon upgrade screen
     type(Key.ESC)  # CLose canons screen
