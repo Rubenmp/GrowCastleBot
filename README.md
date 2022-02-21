@@ -16,8 +16,8 @@ Most of the features can be customized with configuration variables in file [*Gr
     - The treasures shown in the waves will be caught.
 - Watch advertisements depending on variable *watch_advertisements* (default True).
 - Update features
-    - Money: upgrade castle. It depends on variable *upgrade_castle_periodically*
-    - Coins: upgrade castle canons. Depends on variable *spend_diamonds_on_canons* (default True). If the variable is False it could potentially lose diamonds due to the diamond amount limit.
+    - Coins: upgrade castle. It depends on variable *upgrade_castle_periodically*
+    - Diamonds: upgrade castle canons. Depends on variable *spend_diamonds_on_canons* (default True). If the variable is False it could potentially lose diamonds due to the diamond amount limit.
 
 
 ## Requirements
