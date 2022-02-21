@@ -2,7 +2,7 @@ import time
 
 # Configuration
 show_logs = True
-waves_selection_pattern = "REPLAY"  # REPLAY, NEXT or MIXED
+waves_selection_pattern = "REPLAY"  # Possible values: REPLAY, NEXT or MIXED
 watch_advertisements = True
 spend_diamonds_on_canons = True  # Prevent waste of diamonds due to amount limit
 upgrade_castle_periodically = True

@@ -11,13 +11,13 @@ Most of the features can be customized with configuration variables in file [*Gr
     - Infinite waves, selection behaviour using the variable *waves_selection_pattern*, possible values:
         - REPLAY: always replay the last wave
         - BATTLE: continue with the next waves
-        - MIXED: default, a combination of both scenarios, 1/10 (one BATTLE every 10 rounds, the other 9 waves will be REPLAY)
-    - Speed will be increased automatically if possible.
-    - The treasures shown in the waves will be caught.
+        - MIXED: 1/10 combination of both scenarios (one BATTLE every 10 rounds, the other 9 waves will be REPLAY)
+    - Game speed will be increased automatically if possible.
+    - Click on the treasures found in the waves.
 - Watch advertisements depending on variable *watch_advertisements* (default True).
 - Update features
     - Coins: upgrade castle. It depends on variable *upgrade_castle_periodically*
-    - Diamonds: upgrade castle canons. Depends on variable *spend_diamonds_on_canons* (default True). If the variable is False it could potentially lose diamonds due to the diamond amount limit.
+    - Diamonds: upgrade castle canons. It depends on variable *spend_diamonds_on_canons* (default True). If the variable is False it could potentially lose diamonds due to the amount limit.
 
 
 ## Requirements
