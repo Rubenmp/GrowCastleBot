@@ -21,22 +21,23 @@ Most of the features can be customized with configuration variables in file [*Gr
 
 
 ## Requirements
+You must have several programs installed in your computer:
 - Install an emulator to mirror your phone into your computer.
     - Emulator [scrcpy](https://github.com/Genymobile/scrcpy) was used inside Ubuntu 20.04.3 LTS operating system.
     [USB debugging](https://www.youtube.com/watch?v=Ucs34BkfPB0&t=25s) must be enabled in the phone. Probably ['connect as MTP' phone setting](https://stackoverflow.com/questions/28704636/insufficient-permissions-for-device-in-android-studio-workspace-running-in-opens) will also be required.
-- [Install Sikulix](http://sikulix.com/quickstart/), used for image recognition and interface interactions.
+- [Install Sikulix](http://sikulix.com/quickstart/) for image recognition and interface interactions.
 - (Optional) Basic knowledge about [Python](https://www.python.org/) scripting language if you want to modify the behaviour.
-
+- Donwload [GrowCastleBot](https://github.com/Rubenmp/GrowCastleBot)
 
 ## Execution
-Run the phone emulator on your computer
+Run the phone emulator on your computer (connecting your phone using USB)
 ```console
 $ scrcpy
 ```
 
-Open a terminal in the root project folder and execute the bot
+Open a terminal in *GrowCastleBot* root folder and execute the bot (<SIKULIX_JAR_DIR> is the installation folder of SikuliX):
 ```console
-$ java -jar SIKULIX_JAR_DIR/sikulixide-2.0.5.jar -r GrowCastle.sikuli
+$ java -jar <SIKULIX_JAR_DIR>/sikulixide-2.0.5.jar -r GrowCastle.sikuli
 ```
 
 (Optional) In the demo video an alias *RunGrowCastleBot* was created and executed.
