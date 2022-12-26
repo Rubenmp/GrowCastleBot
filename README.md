@@ -35,9 +35,9 @@ Run the phone emulator on your computer (connecting your phone using USB)
 $ scrcpy
 ```
 
-Open a terminal in *GrowCastleBot* root folder and execute the bot (<SIKULIX_JAR_DIR> is the installation folder of SikuliX):
+Open a terminal in *GrowCastleBot* root folder and execute the bot (SIKULIX_JAR_DIR is the installation folder of SikuliX):
 ```console
-$ java -jar <SIKULIX_JAR_DIR>/sikulixide-2.0.5.jar -r GrowCastle.sikuli
+$ java -jar SIKULIX_JAR_DIR/sikulixide-2.0.5.jar -r GrowCastle.sikuli
 ```
 
 (Optional) In the demo video an alias *RunGrowCastleBot* was created and executed.
